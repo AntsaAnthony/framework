@@ -7,7 +7,7 @@ version="2.4">
     <display-name>Application WEB test</display-name> 
     <servlet>
         <servlet-name>FrontServlet</servlet-name> 
-        <servlet-class>servlet.FrontServlet</servlet-class> 
+        <servlet-class>etu1806.framework.servlet.FrontServlet</servlet-class> 
     </servlet>
     <servlet-mapping>
         <servlet-name>FrontServlet</servlet-name>

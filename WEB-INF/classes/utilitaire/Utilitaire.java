@@ -1,6 +1,5 @@
 package utilitaire;
 
-import java.io.PrintWriter;
 
 public class Utilitaire {
     // http://localhost:8081/Sprint1/
