@@ -6,6 +6,8 @@ import jakarta.servlet.http.*;
 import utilitaire.Utilitaire;
 
 public class FrontServlet extends HttpServlet {
+
+    HashMap<String,Mapping> mappingUrls;
   
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
