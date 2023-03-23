@@ -7,9 +7,7 @@ public class Utilitaire {
         String param = "";
         String domaine = url.substring(url.indexOf("//")+2);
         domaine = domaine.substring(domaine.indexOf("/")+1);
-        System.out.println("domaine = "+domaine);
         String temp = domaine.substring(domaine.indexOf("/")+1);
-        System.out.println("temp = "+temp);
         if (temp.contains("?")){
             temp = temp.replace("?", "//split//");
             param = temp.split("//split//")[0];
