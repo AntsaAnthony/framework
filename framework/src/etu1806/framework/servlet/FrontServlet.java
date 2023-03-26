@@ -18,9 +18,9 @@ public class FrontServlet extends HttpServlet {
     public void init() throws ServletException {
         ServletContext context = getServletContext();
         String contextPath = context.getRealPath("/");
-        System.out.println("ty ilay olana "+contextPath);
+        System.out.println("context Path : "+contextPath);
         try {
-            mappingUrls = use.Package.scanPackages(contextPath);
+            mappingUrls = utilitaire.Package.scanPackages(contextPath);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
@@ -29,22 +29,15 @@ public class FrontServlet extends HttpServlet {
   
 
     protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        this.init();
         PrintWriter out = res.getWriter();
         String param = Utilitaire.getUrl(String.valueOf(req.getRequestURL()));
         out.println(" parametre url : "+param);
-        if (mappingUrls.isEmpty()) {
-            out.println("tsy misy inoninona eh");
-        }
-
         for (Map.Entry<String,Mapping> entry : mappingUrls.entrySet()){
-            out.println("misy ve");
             String cle = entry.getKey();
             Mapping value = entry.getValue();
-            out.println("cle : "+cle+ " value : "+ value.getClassName()+" sy "+value.getMethod());
+            out.println("cle : "+cle+ " ,value : "+ value.getClassName()+" sy "+value.getMethod());
         }
 
-        out.println("aiza eh");
     }
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         this.processRequest(req, res);

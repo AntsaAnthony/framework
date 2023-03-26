@@ -1,4 +1,4 @@
-package use;
+package utilitaire;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -42,8 +42,7 @@ public class Package {
   public static Vector<String> getClasses(String absolutePath) {
     Vector<String> files = getFiles(absolutePath);
     Vector<String> reponse = new Vector<String>();
-    String remove = absolutePath.replaceAll("[\\\\/]", ".");
-    System.out.println("ty no esorina"+remove);
+    String remove = absolutePath.replaceAll("[\\\\/]", ".")+"................";
     for (String string : files) {
       reponse.add(
         string.replaceAll(remove, "")
@@ -54,7 +53,7 @@ public class Package {
 
   public static HashMap<String, Mapping> scanPackages(String absolutePath) throws Exception {
     Vector<String> getClasses = Package.getClasses(absolutePath);
-    System.out.println("ato no tsy ampy : "+getClasses);
+    System.out.println(getClasses);
     HashMap<String, Mapping> reponse = new HashMap<String, Mapping>();
     for (String className : getClasses) {
       Class<?> classe = Class.forName(className);
@@ -62,7 +61,7 @@ public class Package {
       for (Method method : methods) {
         if (method.isAnnotationPresent(Url.class)) {
           Annotation annotation = method.getDeclaredAnnotation(Url.class);
-          System.out.println("ilay annotation : "+annotation);
+          System.out.println(" annotation : "+annotation);
           String value = (String) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
           reponse.put(value, new Mapping(className, method.getName()));
         }

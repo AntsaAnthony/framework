@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import etu1806.framework.Mapping;
+import utilitaire.Package;
 import utilitaire.Utilitaire;
 
 
