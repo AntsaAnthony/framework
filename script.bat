@@ -21,7 +21,7 @@ javac -cp "../lib/fw.jar" -d . use/*.java
 
 cd ../../
 
-jar cvf testFramework.war "WEB-INF"
+jar cvf testFramework.war *
 
 copy "testFramework.war" "C:\Program Files\Apache Software Foundation\Tomcat 10.0\webapps"
 
