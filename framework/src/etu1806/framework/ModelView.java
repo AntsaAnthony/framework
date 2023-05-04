@@ -6,6 +6,10 @@ public class ModelView {
     String view;
     HashMap<String,Object> data;
 
+    public ModelView()
+    {
+        
+    }
     public ModelView(String view) {
         setView(view);
     }

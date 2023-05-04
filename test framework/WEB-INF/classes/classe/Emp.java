@@ -10,6 +10,10 @@ public class Emp {
 
     String nom;
 
+    public Emp(){
+
+    }
+
     public Emp(String nom){
         this.nom=nom;
     }
@@ -47,6 +51,35 @@ public class Emp {
     @Url("Emp-getName")
     public static ModelView getName(){
         ModelView view = new ModelView("Name.jsp");
+
+        return view;
+    }
+
+    @Url("Emp-form")
+    public ModelView formulaire(){
+
+        ModelView view = new ModelView("form.jsp");
+        view.addItems("form", "form");
+
+        return view;
+    }
+
+    @Url(value = "Emp-save", paramName ="")
+    public ModelView save(){
+
+        ModelView view = new ModelView();
+        String name = this.nom;
+        view.setView("test.jsp");
+        view.addItems("nom", name);
+
+        return view;    
+    }
+
+    @Url(value = "Emp-findById", paramName = "id")
+    public ModelView findById(int id){
+        ModelView view = new ModelView("cc.jsp");
+
+        view.addItems("id", id);
 
         return view;
     }

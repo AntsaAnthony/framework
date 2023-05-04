@@ -14,9 +14,11 @@
 <body>
 
     <%
-        if(request.getAttribute("nom")!=null){ %>
-            <p>Hello <% out.print(request.getAttribute("nom")); %> </p>
-        <% } %>
+        if(request.getAttribute("id")!=null){ %>
+            <p>Hello <% out.print(request.getAttribute("id")); %> </p>
+        <% }else{
+            out.print("mifona");
+        } %>
     
 </body>
 </html>
