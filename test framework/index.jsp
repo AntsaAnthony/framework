@@ -16,9 +16,9 @@
     <a href="Emp-findById?id=5">5</a>
 
 
-    <%-- <form action="Emp-save" method="post">
+    <form action="Emp-save" method="post">
         <input type="text" name="nom">
         <input type="submit" value="ok">
-    </form> --%>
+    </form>
 </body>
 </html>

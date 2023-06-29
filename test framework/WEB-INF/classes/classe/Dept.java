@@ -3,6 +3,9 @@ package classe;
 import annotation.*;
 
 public class Dept {
+
+    String nom = "";
+    int blba = 0;
     @Url("Dept-save")
     public void save(){
         System.out.println("ceci est une fonction pour save");

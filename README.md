@@ -1,11 +1,14 @@
 # Framework 
-Ceci est un projet de réalisation d'un framework similaire à Spring
+Ceci est un projet de réalisation d'un framework similaire à Spring MVCQ
 
 # Pour commencer
 Copiez le fichier .jar (dans le dossier framework de la branche master) dans le dossier WEB-INF/lib de votre application web 
 
 # Pré-requis
-Pour pouvoir utiliser correctement le framework, il faut avoir une version de Java supérieur à 8
+Pour pouvoir utiliser correctement le framework, il faut :
+:
+* version JDK supérieur à 8
+* version Tomcat supérieur à 10.0
 
 # Comment ça marche
 ## web.xml
@@ -60,4 +63,4 @@ Si vous voulez passer des variables de classe de la vue vers le modele, le nom d
 
 
 # Auteur
- **RAHANIRAKA Antsa Anthony** _alias_ [@AntsaAnthony](https://github.com/AntsaAnthony)
+ **RAHANIRAKA Antsa Anthony** _alias_ __[@AntsaAnthony](https://github.com/AntsaAnthony)__

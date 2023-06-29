@@ -9,6 +9,7 @@ import etu1806.framework.ModelView;
 public class Emp {
 
     String nom;
+    int numero;
 
     public Emp(){
 
@@ -69,8 +70,11 @@ public class Emp {
 
         ModelView view = new ModelView();
         String name = this.nom;
+        int numero = this.numero ;
+
         view.setView("test.jsp");
         view.addItems("nom", name);
+        view.addItems("numero", numero);
 
         return view;    
     }
