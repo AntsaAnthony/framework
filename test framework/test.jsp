@@ -15,7 +15,7 @@
 
     <%
         if(request.getAttribute("nom")!=null){ %>
-            <p>Hello <% out.print(request.getAttribute("nom")); %> </p>
+            <p>Hello <% out.print(request.getAttribute("nom"));%></p>
         <% } %>
     
 </body>

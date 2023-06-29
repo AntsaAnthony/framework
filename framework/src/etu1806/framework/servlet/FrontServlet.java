@@ -12,6 +12,7 @@ import utilitaire.Utilitaire;
 import etu1806.framework.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import annotation.Url;
 
@@ -19,6 +20,7 @@ import annotation.Url;
 public class FrontServlet extends HttpServlet {
 
     HashMap<String,Mapping> mappingUrls;
+    HashMap<String, Object> singletons;
 
     public void init() throws ServletException {
         ServletContext context = getServletContext();
@@ -41,46 +43,49 @@ public class FrontServlet extends HttpServlet {
             if(mappingUrls.containsKey(param)){
                 Mapping mapping = mappingUrls.get(param);
                 Class<?> cls = Class.forName(mapping.getClassName());
-                Object o = cls.getDeclaredConstructor().newInstance();
-                Field[] fields = o.getClass().getDeclaredFields();
+                Object object = cls.getDeclaredConstructor().newInstance();
+
+                //formulaire
+                Field[] fields = cls.getDeclaredFields();
                 String fieldName;
                 String input_value;
                 for (Field field : fields){
                     fieldName = field.getName();
                     input_value = req.getParameter(fieldName);
-
+                    
                     String name = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-
                     
                     if(input_value!=null){
                         try {
                             String methodname = "set"+name;
-                            o.getClass().getMethod(methodname, String.class).invoke(o, input_value);
+                            object.getClass().getMethod(methodname, field.getType()).invoke(object, input_value);
                         } catch (Exception e) {
-                            out.println(e);
+                            out.println("ato amin'ny methodname "+e);
                         }
                     }
                 }
-                // String g = "String.class";
-                // Class[] b = new Class<?>[] {String.class, String.class};
-                Method m = o.getClass().getMethod(mapping.getMethod(),int.class);
-                
+                Method method = this.getMethodByName(mapping.getMethod(), cls);
+                Parameter[] parameters = method.getParameters();
+                Object[] parametersObject = new Object[parameters.length];
+                Object para = null;
+                Object value = null;
+                int i = 0;
                 String[] tabParam = null; 
-                
-                try {
-                    String allParam = m.getAnnotation(Url.class).paramName();
-                    tabParam = allParam.split(",");
-                } catch (Exception ignored) { }
-                    Object value = null;
+                String allParam = method.getAnnotation(Url.class).paramName();
+                tabParam = allParam.split(",");
                     
-                    for(String paramEter : tabParam ) {
-                        out.print(paramEter.trim());
-                        String parametre = req.getParameter(paramEter.trim());
-                        if (parametre!=null) {
-                            value = m.invoke(o,Integer.parseInt(parametre));
-                        }
-                    }
-                    // value = m.invoke(o,0);
+                for (Parameter parameter : parameters) {
+                    para = req.getParameter(tabParam[i]);
+                    out.println("params : "+para);
+                    parametersObject[i] = parseType(para, parameter.getType());    
+                    i++;
+                }
+                if(parametersObject.length==0){
+                    value = method.invoke(object);
+                }
+                else{
+                    value = method.invoke(object,parametersObject);
+                }
                     if (value instanceof ModelView) {
                         ModelView view = (ModelView) value;
                         HashMap<String,Object> data = view.getData();
@@ -113,5 +118,29 @@ public class FrontServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
        this.processRequest(req, res);
    }
+
+   private Object parseType(Object input,Class type){
+        Object value = null;
+        String strval = String.valueOf(input);
+        if (type == int.class) {
+            value = Integer.parseInt(strval);
+        }else if(type == double.class){
+            value = Double.valueOf(strval);
+        }else if(type == String.class){
+            value = strval;
+        }
+        return value;
+    }
+
+    public Method getMethodByName(String methodName,Class classe){
+        Method meth = null;
+        Method[] methods = classe.getMethods();
+        for(Method method : methods){
+            if(method.getName().equals(methodName)){
+                meth=method;
+            }
+        }
+        return meth;
+    }
 }
 
