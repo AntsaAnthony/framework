@@ -4,21 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import annotation.*;
+import etu1806.framework.FileUpload;
 import etu1806.framework.ModelView;
 
+@Scope(types="singleton")
 public class Emp {
 
     String nom;
     int numero;
+    FileUpload file;
 
     public Emp(){
 
     }
-
-    public Emp(String nom){
-        this.nom=nom;
-    }
-
     public String getNom() {
         return nom;
     }
@@ -26,20 +24,20 @@ public class Emp {
     public void setNom(String nom) {
         this.nom = nom;
     }
+    
+    public int getNumero() {
+        return numero;
+    }
 
-    @Url("Emp-findAll")
-    public static ModelView findAll(){
-        ModelView view = new ModelView("list-emp.jsp");
-        List<Emp> list = new ArrayList<>();
-        Emp Koto = new Emp("Koto");
-        Emp Naivo = new Emp("Naivo");
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+    public FileUpload getFile() {
+        return file;
+    }
 
-        list.add(Koto);
-        list.add(Naivo);
-        
-        view.addItems("lst", list);
-        
-        return view;
+    public void setFile(FileUpload file) {
+        this.file = file;
     }
 
     @Url("Emp-test")
@@ -69,13 +67,8 @@ public class Emp {
     public ModelView save(){
 
         ModelView view = new ModelView();
-        String name = this.nom;
-        int numero = this.numero ;
-
         view.setView("test.jsp");
-        view.addItems("nom", name);
-        view.addItems("numero", numero);
-
+        view.addItems("emp", this);
         return view;    
     }
 
@@ -87,4 +80,12 @@ public class Emp {
 
         return view;
     }
+
+    public int getBybyte(){
+        return this.file.getFile().length;
+    }
+
+ 
+
+    
 }

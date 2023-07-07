@@ -9,15 +9,11 @@
 <body>
     <p> Who are you?</p>
 
-    <a href="Emp-findById?id=1">1</a>
-    <a href="Emp-findById?id=2">2</a>
-    <a href="Emp-findById?id=3">3</a>
-    <a href="Emp-findById?id=4">4</a>
-    <a href="Emp-findById?id=5">5</a>
 
-
-    <form action="Emp-save" method="post">
+    <form action="Emp-save" method="post" enctype="multipart/form-data">
         <input type="text" name="nom">
+        <input type="number" name="numero">
+        <input type="file" name="file">
         <input type="submit" value="ok">
     </form>
 </body>

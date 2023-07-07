@@ -18,4 +18,11 @@ public class Utilitaire {
 
         return param;
     }
+
+    public static String capitalize(String input){
+        char[] strrep = input.toCharArray();
+        strrep[0] = Character.toUpperCase(strrep[0]);
+        
+        return new String(strrep);
+    }
 }

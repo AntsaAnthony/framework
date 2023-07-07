@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Vector;
 
+import annotation.Scope;
 import annotation.Url;
 import etu1806.framework.Mapping;
 
@@ -51,17 +52,21 @@ public class Package {
     return reponse;
   }
 
-  public static HashMap<String, Mapping> scanPackages(String absolutePath) throws Exception {
+  public static HashMap<String, Mapping> scanPackages(String absolutePath,HashMap<String,Object> singleton) throws Exception {
     Vector<String> getClasses = Package.getClasses(absolutePath);
-    System.out.println(getClasses);
     HashMap<String, Mapping> reponse = new HashMap<String, Mapping>();
     for (String className : getClasses) {
       Class<?> classe = Class.forName(className);
+      if(classe.isAnnotationPresent(Scope.class)){
+        String type = classe.getAnnotation(Scope.class).types().toString();
+        if(type.equals("singleton")){
+          singleton.put(classe.getSimpleName(),classe.getDeclaredConstructor().newInstance());
+        }
+      }
       Method[] methods = classe.getDeclaredMethods();
       for (Method method : methods) {
         if (method.isAnnotationPresent(Url.class)) {
           Annotation annotation = method.getDeclaredAnnotation(Url.class);
-          System.out.println(" annotation : "+annotation);
           String value = (String) annotation.getClass().getDeclaredMethod("value").invoke(annotation);
           reponse.put(value, new Mapping(className, method.getName()));
         }
