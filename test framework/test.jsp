@@ -3,6 +3,11 @@
     pageEncoding="UTF-8"
 %>
 
+<%
+    Emp emp = (Emp) request.getAttribute("emp");
+
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +19,12 @@
 <body>
 
     <%
-        if(request.getAttribute("nom")!=null){ %>
-            <p>Hello <% out.print(request.getAttribute("nom"));%></p>
-        <% } %>
+        if(emp!=null){ %>
+            <p>Hello <% out.print(emp.getNom());%> numero <% out.print(emp.getNumero());%></p>
+            <p> ty ilay file size  <% out.print(emp.getBybyte());%> </p>
+        <% }else{
+            out.println("coucou");
+        } %>
     
 </body>
 </html>

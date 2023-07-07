@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 import jdk.jshell.execution.Util;
 import utilitaire.Utilitaire;
@@ -16,18 +17,19 @@ import java.util.Vector;
 
 import annotation.Url;
 
-
+@MultipartConfig
 public class FrontServlet extends HttpServlet {
 
     HashMap<String,Mapping> mappingUrls;
     HashMap<String, Object> singletons;
-
+    @Override
     public void init() throws ServletException {
         ServletContext context = getServletContext();
         String contextPath = context.getRealPath("/");
         System.out.println("context Path : "+contextPath);
+        singletons = new HashMap<String,Object>();
         try {
-            mappingUrls = utilitaire.Package.scanPackages(contextPath);
+            mappingUrls = utilitaire.Package.scanPackages(contextPath,singletons);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e);
@@ -38,30 +40,42 @@ public class FrontServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         PrintWriter out = res.getWriter();
         String param = Utilitaire.getUrl(String.valueOf(req.getRequestURL()));
-    
+        
+       
         try {
             if(mappingUrls.containsKey(param)){
                 Mapping mapping = mappingUrls.get(param);
                 Class<?> cls = Class.forName(mapping.getClassName());
-                Object object = cls.getDeclaredConstructor().newInstance();
+                Object object;
+                if(singletons.containsKey(cls.getSimpleName())){
+                    resetObject(this.singletons.get(cls.getSimpleName()));
+                    object = singletons.get(cls.getSimpleName());
+                }else{
+                    object = cls.getDeclaredConstructor().newInstance();
+                }
 
                 //formulaire
                 Field[] fields = cls.getDeclaredFields();
                 String fieldName;
-                String input_value;
+                Object input_value;
                 for (Field field : fields){
                     fieldName = field.getName();
-                    input_value = req.getParameter(fieldName);
-                    
-                    String name = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-                    
+                    if(field.getType().equals(FileUpload.class)){
+                        input_value = FileUpload.uploadFile(req, this);
+                    }
+                    else{
+                        input_value = req.getParameter(fieldName);
+                    }                    
                     if(input_value!=null){
                         try {
-                            String methodname = "set"+name;
-                            object.getClass().getMethod(methodname, field.getType()).invoke(object, input_value);
+                            String methodname = "set"+Utilitaire.capitalize(fieldName);
+                            object.getClass().getMethod(methodname, field.getType()).invoke(object, parseType(input_value,field.getType()));
                         } catch (Exception e) {
-                            out.println("ato amin'ny methodname "+e);
+                            out.print(this.singletons);
+                            out.println("error 2 : "+e);
                         }
+                    }else{
+                        out.println("null zany");
                     }
                 }
                 Method method = this.getMethodByName(mapping.getMethod(), cls);
@@ -90,6 +104,7 @@ public class FrontServlet extends HttpServlet {
                         ModelView view = (ModelView) value;
                         HashMap<String,Object> data = view.getData();
                         for(String key : data.keySet()){
+                            out.println("key : "+key+" , value : "+data.get(key));
                             req.setAttribute(key,data.get(key));
                         }
                         req.getRequestDispatcher(view.getView()).forward(req, res);
@@ -101,12 +116,15 @@ public class FrontServlet extends HttpServlet {
             else{
                 if (param=="") {
                     out.println("salut");
+                    for(String key : singletons.keySet()){
+                        out.println(key +" : "+singletons.get(key));
+                    }
                 }else{
                     out.println("can not find : "+param);
                 }
             }
         } catch (Exception e) {
-            out.println(e);
+            out.println("error 1 : "+e);
         }
         
 
@@ -128,6 +146,8 @@ public class FrontServlet extends HttpServlet {
             value = Double.valueOf(strval);
         }else if(type == String.class){
             value = strval;
+        }else if(type == FileUpload.class){
+            value = (FileUpload) input;
         }
         return value;
     }
@@ -142,5 +162,29 @@ public class FrontServlet extends HttpServlet {
         }
         return meth;
     }
+
+    public void resetObject(Object object){
+        Field[] fields = object.getClass().getDeclaredFields();
+        Object value = null;
+
+        for (Field field : fields){
+            if(field.getType().equals(int.class) || field.getType().equals(double.class) || field.getType().equals(float.class)){
+                value = 0;
+            }
+            else if(field.getType().equals(boolean.class)){
+                value = false;
+            }
+            else{
+                value = null;
+            }
+
+            try {
+                object.getClass().getMethod("set"+Utilitaire.capitalize(field.getName()), field.getType()).invoke(object, value);
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
+        }
+    }
+
 }
 
