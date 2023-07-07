@@ -14,6 +14,8 @@ public class FileUpload {
     String path;
     byte[] file;
 
+    
+
 
     public FileUpload(String name, String path, byte[] file) {
         this.name = name;
